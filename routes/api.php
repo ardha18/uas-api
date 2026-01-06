@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BukuController;
+use App\Http\Controllers\MotorController;
 use App\Http\Controllers\ObatController;
+use App\Http\Controllers\PasienController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +24,27 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
 Route::get('/obat', [ObatController::class, 'index']);
 Route::post('/obat', [ObatController::class, 'store']);
 Route::get('/obat/{idobat}', [ObatController::class, 'show']);
 Route::put('/obat/{idobat}', [ObatController::class, 'update']);
 Route::delete('/obat/{idobat}', [ObatController::class, 'destroy']);
+
+Route::get('/buku', [BukuController::class, 'index']);
+Route::post('/buku', [BukuController::class, 'store']);
+Route::get('/buku/{idobat}', [BukuController::class, 'show']);
+Route::put('/buku/{idobat}', [BukuController::class, 'update']);
+Route::delete('/buku/{idobat}', [BukuController::class, 'destroy']);
+
+Route::get('/motor', [MotorController::class, 'index']);
+Route::post('/motor', [MotorController::class, 'store']);
+Route::get('/motor/{idobat}', [MotorController::class, 'show']);
+Route::put('/motor/{idobat}', [MotorController::class, 'update']);
+Route::delete('/motor/{idobat}', [MotorController::class, 'destroy']);
+
+Route::get('/pasien', [PasienController::class, 'index']);
+Route::post('/pasien', [PasienController::class, 'store']);
+Route::get('/pasien/{idobat}', [PasienController::class, 'show']);
+Route::put('/pasien/{idobat}', [PasienController::class, 'update']);
+Route::delete('/pasien/{idobat}', [PasienController::class, 'destroy']);

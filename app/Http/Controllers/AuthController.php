@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    // Fungsi pembungkus respon agar rapi
     private function formatResponse($data, $code = 200, $status = true)
     {
         return response()->json([
@@ -17,10 +18,12 @@ class AuthController extends Controller
             'data' => $data
         ], $code);
     }
+
     public function register(Request $request)
     {
+        // 1. Validasi Input (Pastikan menggunakan 'name' bukan 'nama')
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6'
         ]);
@@ -29,30 +32,30 @@ class AuthController extends Controller
             return $this->formatResponse($validator->errors()->first(), 422, false);
         }
 
+        // 2. Simpan ke Database
         $user = User::create([
-            'name' => $request->nama,
+            'name' => $request->name,  // Pastikan ini 'name' sesuai kiriman Flutter
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
 
-        return $this->formatResponse("Registrasi Berhasil", 200);
+        // 3. Return sukses dengan kode 201 (Created)
+        return $this->formatResponse("Registrasi Berhasil", 201);
     }
+
     public function login(Request $request)
     {
-        // Validasi input
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required'
         ]);
 
-        // Cari user berdasarkan email
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return $this->formatResponse('Email atau password salah.', 401, false);
         }
 
-        // Jika pakai Sanctum untuk token:
         $token = $user->createToken('api-token')->plainTextToken;
 
         $data = [
@@ -62,6 +65,8 @@ class AuthController extends Controller
                 'email' => $user->email,
             ]
         ];
+        
+        // Return sukses dengan kode 200
         return $this->formatResponse($data, 200);
     }
 }
